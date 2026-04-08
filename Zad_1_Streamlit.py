@@ -27,10 +27,9 @@ from scipy import signal
 
 #%%--------------------------------Lokalizacja pliku---------------------------
 
-path_file = r"C:\ekg\ahjk\ekg\ekg_spoczynkowe_Alisa.txt"
+path_file = "ekg_spoczynkowe_Alisa.txt"
 
-with open(path_file, encoding='utf-8') as f:
-    data = f.read()
+
 
 #%%--------------------------------Ustawienia wstępne--------------------------
 
@@ -86,7 +85,7 @@ st.markdown(f"""
 import os
 
 # Folder z Twoimi plikami
-DATA_FOLDER = r"C:\ekg\ahjk\ekg"
+DATA_FOLDER = "."
 
 # Pobieramy wszystkie pliki txt zaczynające się od "ekg_"
 txt_files = sorted([f for f in os.listdir(DATA_FOLDER) 
