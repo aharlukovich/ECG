@@ -79,7 +79,23 @@ st.markdown(f"""
     }}
     </style>
     """, unsafe_allow_html=True)
-    
+
+#-------------------------------SUWAKI-----------------------------------------#
+st.markdown("""
+<style>
+/* Suwak (track + kółko) */
+[data-baseweb="slider"] div {
+    color: #0092ff !important;
+}
+
+/* Uchwyt suwaka */
+[data-baseweb="slider"] [role="slider"] {
+    background-color: #0092ff !important;
+    border-color: #0092ff !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
 #%%--------------------------------ŁADOWANIE DANYCH-----------------------------
 
 import os
