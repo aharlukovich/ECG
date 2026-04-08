@@ -252,7 +252,7 @@ with col3:
             y=df['ecg'], 
             mode='lines',
             name='Fragment do analizy',
-            line=dict(color=lekki_czerwony, width=3) # Wyrazisty czerwony
+            line=dict(color=niebieski, width=3) # Wyrazisty czerwony
         ))
 
         # 4. Stylizacja wykresu
