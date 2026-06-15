@@ -1,10 +1,3 @@
-#ZADANIE 1
-
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# 25.11.2025 edergergfer
-#pomoc: https://www.kaggle.com/code/stetelepta/exploring-heart-rate-variability-using-python
-
 #%%------------------------------------BIBLIOTEKI------------------------------
 
 import pandas as pd
@@ -28,8 +21,6 @@ from scipy import signal
 #%%--------------------------------Lokalizacja pliku---------------------------
 
 path_file = "ekg_spoczynkowe_Alisa.txt"
-
-
 
 #%%--------------------------------Ustawienia wstępne--------------------------
 
@@ -81,6 +72,7 @@ st.markdown(f"""
     """, unsafe_allow_html=True)
 
 #-------------------------------SUWAKI-----------------------------------------#
+
 st.markdown("""
 <style>
 /* Suwak (track + kółko) */
@@ -100,10 +92,10 @@ st.markdown("""
 
 import os
 
-# Folder z Twoimi plikami
+# Folder z plikami
 DATA_FOLDER = "."
 
-# Pobieramy wszystkie pliki txt zaczynające się od "ekg_"
+# Pobieranie wszystkich plików txt zaczynających się od "ekg_"
 txt_files = sorted([f for f in os.listdir(DATA_FOLDER) 
                     if f.endswith(".txt") and f.startswith("ekg_")])
 
@@ -137,7 +129,7 @@ def load_my_data(file_path: str):
         on_bad_lines='skip'
     )
    
-    # Bierzemy tylko pierwsze 3 kolumny
+    # Tylko pierwsze 3 kolumny
     df = df.iloc[:, :3]
     df.columns = ['czas', 'oddech', 'ecg']
     
@@ -150,13 +142,10 @@ def load_my_data(file_path: str):
 # Wczytanie wybranego pliku
 df = load_my_data(file_path)
 
-# Usuwamy duplikację kolumn (miałaś to dwa razy)
-# df.columns = ['czas','oddech','ecg']   ← niepotrzebne, już zrobione w funkcji
-
-# Na wszelki wypadek zamieniamy przecinki na kropki w kolumnie czas (bezpiecznik)
+# Zamieniono przecinki na kropki w kolumnie czas (bezpiecznik)
 df['czas'] = df['czas'].astype(str).str.replace(',', '.', regex=False)
 
-#---------------------------Usuwamy wszystko to co nie jest liczbą (dodatkowe czyszczenie)
+#---------------------------Usunięto wszystko to co nie jest liczbą (dodatkowe czyszczenie)
 df = df.apply(pd.to_numeric, errors='coerce')
 df = df.dropna().reset_index(drop=True)
 #%%---------------------------------Tytuł i ramka------------------------------
@@ -203,7 +192,7 @@ with col2:
 
     #-----------------------Kolumna 2
             
-        # Wyświetlamy w MB jeśli plik jest duży, inaczej w KB
+        # Wyświetlono w MB jeśli plik jest duży, inaczej w KB
     min_czas = float(df['czas'].min())
     max_czas = float(df['czas'].max())
     zakres_czasu = st.slider("Wybierz zakres czasu do analizy [s]:",min_value=min_czas,max_value=max_czas,value=(min_czas, max_czas),step=0.1)
@@ -220,7 +209,7 @@ with col2:
     dane_pie, 
     values='Liczba próbek', 
     names='Status',
-    hole=0.4,  # Robimy z tego "Donut chart", wygląda nowocześniej
+    hole=0.4,  # Robiono z tego "Donut chart"
     color_discrete_sequence=['#e74c3c', '#7e7e7e'] # Zielony i ciemnoszary
 )
 
@@ -237,7 +226,7 @@ with col3:
         
     fig = go.Figure()
 
-        # 2. Dodajemy Sygnał Surowy (niebieski, cieńszy)
+        # 2. Dodano Sygnał Surowy (niebieski, cieńszy)
     fig.add_trace(go.Scatter(
             x=df_stary['czas'], 
             y=df_stary['ecg'], 
@@ -246,7 +235,7 @@ with col3:
             line=dict(color=bialo_szary, width=2)
         ))
 
-        # 3. Dodajemy Sygnał Przefiltrowany (czerwony, grubszy)
+        # 3. Dodano Sygnał Przefiltrowany (czerwony, grubszy)
     fig.add_trace(go.Scatter(
             x=df['czas'], 
             y=df['ecg'], 
@@ -274,10 +263,8 @@ with col3:
 
     with st.container(border=True):
         st.plotly_chart(fig, use_container_width=True)
-    # Dodajemy grubszą linię dla oddzielenia (tę, którą robiliśmy wcześniej)
+    # Dodano grubszą linię dla oddzielenia 
 
-
-    
 st.markdown("""
     <hr style="margin-top: -10px;height:5px; border:none; color:#444444; background-color:#444444;" />
 """, unsafe_allow_html=True)
@@ -300,7 +287,7 @@ with col1:
             </div>
         """, unsafe_allow_html=True)
         
-    #-----------------------------------dajemy 3 kolumny zeby wycentrować suwaki
+    #-----------------------------------dano 3 kolumna zeby wycentrować suwaki
     lewy, srodek, prawy = st.columns([0.1, 0.8, 0.1])
     with srodek:
         window_length = st.slider("Długoć okna filtra:", min_value=1,max_value=102,value=43, step=1)
@@ -314,10 +301,10 @@ df['ecg_filtrowany'] = savgol_filter(surowy_wektor, window_length, polyorder)
 
 
 with col2:
-    # 1. Tworzymy pustą figurę
+    # 1. Stworzono pustą figurę
     fig = go.Figure()
 
-    # 2. Dodajemy Sygnał Surowy (niebieski, cieńszy)
+    # 2. Dodano Sygnał Surowy (niebieski, cieńszy)
     fig.add_trace(go.Scatter(
         x=df['czas'], 
         y=df['ecg'], 
@@ -326,7 +313,7 @@ with col2:
         line=dict(color='rgba(52, 152, 219, 0.5)', width=1) # Przezroczysty niebieski
     ))
 
-    # 3. Dodajemy Sygnał Przefiltrowany (czerwony, grubszy)
+    # 3. Dodano Sygnał Przefiltrowany (czerwony, grubszy)
     fig.add_trace(go.Scatter(
         x=df['czas'], 
         y=df['ecg_filtrowany'], 
@@ -363,7 +350,7 @@ st.markdown("""
             
 col1, col2 = st.columns([ 4 ,4.5 ])
 
-with col1:    # Wyciągamy wartości .values, aby uniknąć błędów z indeksami
+with col1:    # Wyciągno wartości .values, aby uniknąć błędów z indeksami
     st.markdown('<p style="margin-top: px; font-size: 18px; font-weight: bold; color: #0092ff;"> Identyfikacja załamków R i tworzenie szeregu RR</p>', unsafe_allow_html=True)
 
     col_left, col_right = st.columns([ 1 ,4 ])
@@ -398,7 +385,7 @@ with col1:    # Wyciągamy wartości .values, aby uniknąć błędów z indeksam
         fig.add_trace(go.Scatter(x=df['czas'], y=df['ecg_filtrowany'], mode='lines',name='Sygnał EKG',
         line=dict(color='#C3E5FF', width=1.5)))
 
-    # 4. Dodajemy wykryte szczyty (Czerwone kropki)
+    # 4. Dodano wykryte szczyty (Czerwone kropki)
         fig.add_trace(go.Scatter(
         x=df['czas'].iloc[peaks],
         y=df['ecg_filtrowany'].iloc[peaks],
@@ -431,9 +418,6 @@ with col1:    # Wyciągamy wartości .values, aby uniknąć błędów z indeksam
 
         with st.container(border=True):
             st.plotly_chart(fig, use_container_width=True)
-
-
-
 
 
     czasy_pikow = df['czas'].iloc[peaks].values
@@ -523,13 +507,13 @@ with col2:
             fig_hist = px.histogram(
     df_rr, 
     x="rr_ms", 
-    nbins=histogram_bins, # Możesz zwiększyć tę liczbę dla większej precyzji
+    nbins=histogram_bins, # zwiekszenie da więcej precyzji
     labels={'rr_ms': 'Odstęp RR [ms]'},
-    color_discrete_sequence=[niebieski], # Czerwony pasujący do pików
+    color_discrete_sequence=[niebieski], 
     marginal="rug" # Dodaje małe kreski na dole pokazujące konkretne uderzenia
 )
 
-# 2. Stylizacja (podciągamy do góry i dopasowujemy do dashboardu)
+# 2. Stylizacja
             fig_hist.update_layout(
     height=250,
     margin=dict(l=0, r=0, t=0, b=0),
@@ -589,24 +573,24 @@ with col1:
         window = st.slider("Próg dla pików R:", min_value=100,max_value=1000,value=250, step=10)
 
 
-    # Jeśli częstotliwość to np. 500Hz, window=125 da nam 250ms przed i po załamku R
+    # Jeśli częstotliwość to np. 500Hz, window=125 da 250ms przed i po załamku R
         ecg_signal = df['ecg_filtrowany'].values
         qrs_dict = {} # Słownik do szybkiego budowania DataFrame
 
     # 2. Ekstrakcja segmentów
         for i, r in enumerate(peaks):
-            # Sprawdzamy granice sygnału
+            # Sprawdzono granice sygnału
             if r > window and r + window < len(ecg_signal):
                 segment = ecg_signal[r - window : r + window].copy()
             
-            # Opcjonalna korekcja linii izoelektrycznej (odejmujemy średnią)
+            # Opcjonalna korekcja linii izoelektrycznej (odejmowanie sredniej)
                 segment = segment - np.mean(segment)
             
-            # Zapisujemy do słownika: klucz to nazwa kolumny, wartość to segment
+            # Zapisano do słownika: klucz to nazwa kolumny, wartość to segment
                 qrs_dict[f'QRS_{i+1:02d}'] = segment
 
     # 3. Tworzenie DataFrame
-    # Indeks ustawiamy od -window do +window, żeby środek (R) był w zerze
+    # Indeks ustawiono od -window do +window, żeby środek (R) był w zerze
         df_qrs = pd.DataFrame(qrs_dict, index=range(-window, window))
         
         
@@ -622,7 +606,7 @@ with col1:
     # 3. Tworzenie wykresu
     fig_seg = go.Figure()
 
-    # Ścieżka całego sygnału (szary, żeby nie odciągał uwagi)
+    # Ścieżka całego sygnału
     fig_seg.add_trace(go.Scatter(
         x=df['czas'], 
         y=df['ecg_filtrowany'],
@@ -631,7 +615,7 @@ with col1:
         name='Pełny sygnał'
     ))
 
-    # Podświetlony segment (wybrany kolor, np. Twój zielony)
+    # Podświetlony segment zielonu kolor
     fig_seg.add_trace(go.Scatter(
         x=df['czas'].iloc[start_idx:stop_idx],
         y=df['ecg_filtrowany'].iloc[start_idx:stop_idx],
@@ -644,7 +628,7 @@ with col1:
     fig_seg.add_vrect(
         x0=df['czas'].iloc[start_idx], 
         x1=df['czas'].iloc[stop_idx],
-        fillcolor=zielony, opacity=0.2, # Twój żółty jako tło
+        fillcolor=zielony, opacity=0.2, 
         layer="below", line_width=0,
     )
 
@@ -680,36 +664,34 @@ with col2:
         y_max_sredni = df_qrs['SREDNI_QRS'].max()
         margines = (y_max_sredni - y_min_sredni) * 0.15
 
-# 2. Tworzymy bazowy wykres Plotly Express
+# 2. TStworzono bazowy wykres Plotly Express
         fig_qrs = px.line(df_qrs, 
                   labels={'index': 'Próbki względem R', 'value': 'Amplituda'},
                   title="Nałożone segmenty QRS z uśrednionym profilem")
 
-# 3. Ustawiamy WSZYSTKIE linie na szaro i lekko przezroczyste
+# 3. Ustawiono WSZYSTKIE linie na szaro i lekko przezroczyste
         fig_qrs.update_traces(line=dict(width=1, color='rgba(150, 150, 150, 0.3)'), opacity=0.4)
         fig_qrs.update_layout(
     yaxis=dict(
         range=[y_min_sredni - margines, y_max_sredni + margines],
-        fixedrange=False # Pozwalamy użytkownikowi na ręczny zoom, ale startujemy z "uśrednionej" skali
+        fixedrange=False # Pozwalono użytkownikowi na ręczny zoom, ale startowano z "uśrednionej" skali
     ),
     template="plotly_dark",
     uirevision='constant'
 )
 
-# 4. Wyróżniamy tylko linię średnią (nadajemy jej Twój zielony i większą grubość)
+# 4. Wyróżniono tylko linię średnią 
         fig_qrs.for_each_trace(
     lambda trace: trace.update(line=dict(color=zielony, width=4), opacity=1) 
     if trace.name == 'SREDNI_QRS' else ()
 )
 
-# 5. Opcjonalnie: Przesuń średni profil na sam wierzch (żeby nie był przykryty szarymi)
+# 5. 
         fig_qrs.data = [t for t in fig_qrs.data if t.name != 'SREDNI_QRS'] + \
                [t for t in fig_qrs.data if t.name == 'SREDNI_QRS']
 
 # Wyświetlenie w Streamlit
         st.plotly_chart(fig_qrs, use_container_width=True)
-        
-        
         
     with prawy:
         wybrana_kolumna = f'QRS_{idx_segmentu + 1:02d}'
@@ -717,20 +699,20 @@ with col2:
         y_values = df_qrs[wybrana_kolumna].values
         x_values = df_qrs.index  # To są nasze próbki od -window do +window
 
-# 3. Tworzymy wykres pojedynczego zespołu
+# 3. Stworzono wykres pojedynczego zespołu
         fig_single = go.Figure()
 
         fig_single.add_trace(go.Scatter(
     x=list(x_values), 
     y=list(y_values),
     mode='lines',
-    line=dict(color=zielony, width=4), # Twój zielony, gruby profil
+    line=dict(color=zielony, width=4), # zielony, gruby profil
     name=wybrana_kolumna,
-    fill='tozeroy', # Opcjonalnie: wypełnienie pod wykresem dla lepszego efektu
+    fill='tozeroy', # wypełnienie pod wykresem 
     fillcolor='rgba(46, 204, 113, 0.2)'
 ))
 
-# 4. Stylizacja "laboratoryjna"
+# 4. Stylizacja 
         fig_single.update_layout(
     title=f"Analiza morfologii: {wybrana_kolumna}",
     xaxis_title="Próbki względem załamka R [n]",
@@ -738,7 +720,7 @@ with col2:
     template="plotly_dark",
     height=400,
     showlegend=False,
-    # Dodajemy linię zero (izoelektryczną) dla orientacji
+    # Dodano linię zero (izoelektryczną) dla orientacji
     shapes=[dict(
         type='line', yref='y', y0=0, y1=0, xref='x', x0=x_values.min(), x1=x_values.max(),
         line=dict(color="white", width=1, dash="dot")
@@ -748,13 +730,11 @@ with col2:
 # 5. Wyświetlenie w Streamlit
         st.plotly_chart(fig_single, use_container_width=True)
         
-        
-        
-        
-        
 # 1. Przygotowanie danych do macierzy (Z)
-# Transponujemy, aby oś X była czasem wewnątrz QRS, a oś Y numerem uderzenia
-# Usuwamy kolumnę 'SREDNI_QRS', jeśli ją wcześniej dodałeś, żeby nie psuła wykresu
+# Transponowano, aby oś X była czasem wewnątrz QRS, a oś Y numerem uderzenia
+# Usunięto kolumnę 'SREDNI_QRS', jeśli ją wcześniej doda, żeby nie psuła wykresu
+
+
 z_data = df_qrs.drop(columns=['SREDNI_QRS'], errors='ignore').values.T 
 
 # 2. Tworzenie osi
@@ -766,7 +746,7 @@ fig_3d = go.Figure(data=[go.Surface(
     z=z_data, 
     x=x_axis, 
     y=y_axis,
-    colorscale='Rainbow', # Możesz zmienić na 'Greens', jeśli wolisz swój styl
+    colorscale='Rainbow', 
     colorbar=dict(title="Amplituda"),
     opacity=0.9
 )])
@@ -793,17 +773,10 @@ st.plotly_chart(fig_3d, use_container_width=True)
 styled_df = df_qrs.style.map(lambda x: f"color: {zielony}; font-weight: bold;")
 wybrana_kolumna = f'QRS_{idx_segmentu + 1:02d}'
 
-# 2. Definiujemy funkcję stylizującą
+# 2. Definicja funkcji stylizującej
 def highlight_selected(x):
         return f'color: #2ecc71; font-weight: bold; background-color: rgba(46, 284, 113, 0.1);'
-
-# === ZAMIENIAMY CAŁY BLOK STYLIZOWANEJ TABELI ===
-
-# Usuń te linie:
-# styled_df = df_qrs.style.applymap(...)
-# st.dataframe(styled_df, use_container_width=True)
-
-# Zastąp je tym:
+    
 
 with st.expander("🗃️ Pełna tabela segmentów QRS (uśredniony profil + wybrane segmenty)", expanded=False):
     # Pokazujemy tylko najważniejsze kolumny + średnią
@@ -813,7 +786,7 @@ with st.expander("🗃️ Pełna tabela segmentów QRS (uśredniony profil + wyb
     
     st.dataframe(
         display_df,
-        use_container_width=True,      # zostaw na razie (będzie warning, ale działa)
+        use_container_width=True,    
         height=600
     )
     
@@ -839,7 +812,7 @@ with col_ctrl:
     imfs_to_remove = st.slider("Liczba ostatnich IMF do usunięcia (modulacja oddechowa)", 
                                min_value=1, max_value=6, value=2, step=1)
     
-    fs = 1000  # Twoja częstotliwość próbkowania
+    fs = 1000  # częstotliwość próbkowania
     
     if st.button("🚀 Wykonaj dekompozycję EMD", type="primary", use_container_width=True):
         with st.spinner("Trwa dekompozycja EMD..."):
@@ -949,7 +922,7 @@ with col_main:
             
             fig_hht = go.Figure(data=go.Heatmap(
                 z=hht.T,
-                x=czas_hht,           # użyjamy zredukowanego czasu
+                x=czas_hht,           # zredukowany czas
                 y=hht_f,
                 colorscale='Hot_r',
                 zsmooth='best',       # lepsze wygładzanie przy mniejszej rozdzielczości
